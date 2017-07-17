@@ -447,7 +447,7 @@ Request.prototype.init = function (options) {
     self.oauth(self._oauth.params)
   }
 
-  var protocol = self.proxy && !self.tunnel ? self.proxy.protocol : self.uri.protocol
+  var protocol = self.uri.protocol;
   var defaultModules = {'http:': http, 'https:': https}
   var httpModules = self.httpModules || {}
 
@@ -637,10 +637,8 @@ Request.prototype.getNewAgent = function () {
 
   // ca option is only relevant if proxy or destination are https
   var proxy = self.proxy
-  if (typeof proxy === 'string') {
-    proxy = url.parse(proxy)
-  }
-  var isHttps = (proxy && proxy.protocol === 'https:') || this.uri.protocol === 'https:'
+  var isSecureProxy = proxy && proxy.protocols && proxy.protocols.constructor === Array && proxy.protocols.indexOf('https') !== -1
+  var isHttps = isSecureProxy || this.uri.protocol === 'https:'
 
   if (isHttps) {
     if (options.ca) {
