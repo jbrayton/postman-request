@@ -331,9 +331,12 @@ Request.prototype.init = function (options) {
 
   // Support Unix Sockets
   if (self.uri.host === 'unix') {
-    self.enableUnixSocket()
+    if (options.disableSockets === true) {
+      return self.emit('error', new Error('Socket support disabled.'))
+    } else {
+      self.enableUnixSocket()
+    }
   }
-
   if (self.strictSSL === false) {
     self.rejectUnauthorized = false
   }

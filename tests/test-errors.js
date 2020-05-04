@@ -50,6 +50,16 @@ tape('deprecated unix URL', function (t) {
   t.end()
 })
 
+tape('sockets disabled', function (t) {
+  t.throws(function () {
+    request({
+      uri: 'http://unix/foobar',
+      disableSockets: true
+    })
+  }, /^Error: Socket support disabled./)
+  t.end()
+})
+
 tape('invalid body', function (t) {
   t.throws(function () {
     request({
